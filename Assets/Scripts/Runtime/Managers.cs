@@ -1,39 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Runtime.Util;
+using Runtime.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Managers : MonoBehaviour
 {
-    private static Managers instance;
+    private static Managers _instance;
 
     private static Managers Instance
     {
         get
         {
             Initialize();
-            return instance;
+            return _instance;
         }
     }
 
     private const string DEFAULT_NAME = "@Managers";
 
-    private GameManager _game;
+    private readonly GameManager _game = new GameManager();
     public static GameManager Game => Instance._game;
 
+    private void Awake()
+        => gameObject.name = DEFAULT_NAME;
+
+    private void Start()
+        => Initialize();
+
+    
+    
+    
     private static void Initialize()
     {
-        if (instance != null) return;
+        if (_instance != null) return;
 
-        instance = GameObject.Find(DEFAULT_NAME).GetComponent<Managers>();
-        
-        if (instance == null) 
-            instance = new GameObject(DEFAULT_NAME).AddComponent<Managers>();
+        Util.FindOrNewComponent(out _instance, DEFAULT_NAME);
 
         Scene managerScene = SceneManager.CreateScene("Managers");
 
-        SceneManager.MoveGameObjectToScene(instance.gameObject, managerScene);
-        
+        SceneManager.MoveGameObjectToScene(_instance.gameObject, managerScene);
     }
 }
