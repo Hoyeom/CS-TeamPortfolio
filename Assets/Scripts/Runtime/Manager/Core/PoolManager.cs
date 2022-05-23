@@ -52,7 +52,7 @@ using UnityEngine.SceneManagement;
                     poolable = _poolStack.Pop();
                 else
                     poolable = Create();
-                
+
                 poolable.gameObject.SetActive(true);
                 // 현재 씬으로 이동
                 poolable.transform.parent = null;

@@ -10,11 +10,10 @@ public class GameManager
     public PlayerController Player { get; private set; }
 
     private GameSetting _setting = null;
-
-    private GameObject _platform;
+    
     private Vector3 _spawnPos = Vector3.zero;
     private Define.Dir _spawnDir = Define.Dir.Left;
-
+    
     private int floorCount = 0; // TEST
     private int score = 0;
 
@@ -46,11 +45,11 @@ public class GameManager
     public GameSetting Setting => _setting;
 
     private Queue<Platform> PlatformQueue { get; } = new Queue<Platform>();
+    private Queue<GameObject> destroyQueue { get; } = new Queue<GameObject>();
 
     public void Initialize()
     {
         _setting = Managers.Resource.Load<GameSetting>("Settings/Normal");
-        _platform = Managers.Resource.Load<GameObject>("Prefabs/Platform");
 
         _setting = Managers.Game.Setting;
         while (PlatformQueue.Count < 20)
@@ -66,9 +65,13 @@ public class GameManager
     {
         if (PlatformQueue.Count < 20)
             GeneratePlatform();
+        if (destroyQueue.Count > 10)
+        {
+            Managers.Resource.Destroy(destroyQueue.Dequeue());
+        }
 
         Platform platform = PlatformQueue.Dequeue();
-
+        destroyQueue.Enqueue(platform.gameObject);
         return platform;
     }
 
@@ -87,13 +90,15 @@ public class GameManager
         for (int i = 0; i < rand; i++)
         {
             _spawnPos += new Vector3(_setting.PlatformOffsetX * dir, _setting.PlatformOffsetY);
-            GameObject obj = Object.Instantiate(_platform, _spawnPos, Quaternion.identity);
+            GameObject obj = Managers.Resource.Instantiate("Platform");
+            obj.transform.position = _spawnPos;
+            
             Platform platform = obj.GetComponent<Platform>();
             platform.Dir = _spawnDir;
 
             // TODO 아이템 랜덤 생성
             
-            SpawnItem(floorCount, platform.Pos);
+            SpawnItem(floorCount, platform.transform.position);
             
             //
             floorCount++;
@@ -111,7 +116,6 @@ public class GameManager
     private void SpawnItem(int floor, Vector3 pos)
     {
         if (floor < 100) return;
-        
 
         GameObject obj = null;
         
@@ -160,13 +164,15 @@ public class GameManager
 
         if(obj != null) return;
         
-        SpawnCoin(floor, pos);
+        SpawnCoin(pos);
     }
 
-    void SpawnCoin(int floor,Vector3 pos)
+    void SpawnCoin(Vector3 pos)
     {
         GameObject obj = null;
         float rand = Random.Range(0, 100f);
+        
+        Debug.Log("코인 생성");
         
         if(rand < 4)
             obj = Managers.Resource.Instantiate("Items/CoinSet");

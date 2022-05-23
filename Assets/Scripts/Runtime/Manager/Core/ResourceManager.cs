@@ -28,6 +28,7 @@
             if (original.GetComponent<Poolable>() != null)
                 return Managers.Pool.Pop(original, parent).gameObject;
             
+            
             GameObject go = Object.Instantiate(original, parent);
             go.name = original.name;
             return go;
