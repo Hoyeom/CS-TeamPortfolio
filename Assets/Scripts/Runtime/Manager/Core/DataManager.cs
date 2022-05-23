@@ -20,6 +20,7 @@ public class DataManager
         
         if (!Directory.Exists(DATA_DIRECTORY))
             Directory.CreateDirectory(SAVE_FILENAME);
+        LoadData();
     }
     
     public void SaveData()

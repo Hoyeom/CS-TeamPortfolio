@@ -10,7 +10,6 @@ namespace Runtime.Scenes
         public void Awake()
         {
             Initialize();
-            Managers.Data.LoadData();
         }
 
         protected virtual void Initialize()
@@ -20,7 +19,6 @@ namespace Runtime.Scenes
 
             if (eventSystem == null)
                 Managers.Resource.Instantiate("UI/EventSystem").name = $"@{nameof(EventSystem)}";
-            
         }
 
         public abstract void Clear();

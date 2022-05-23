@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 
 namespace Runtime.UI
@@ -9,6 +10,11 @@ namespace Runtime.UI
         private void Awake()
         {
             Managers.Game.OnChangeCoin += OnChangeCoin;
+        }
+
+        private void Start()
+        {
+            OnChangeCoin(Managers.Game.Coin);
         }
 
         private void OnChangeCoin(int score)

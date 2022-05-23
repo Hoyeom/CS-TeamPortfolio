@@ -1,1 +1,1 @@
-{"coin":1,"bestScore":106}
+{"coin":0,"bestScore":0}
