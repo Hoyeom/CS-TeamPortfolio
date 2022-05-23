@@ -11,6 +11,7 @@ namespace Runtime.Scenes
         protected override void Initialize()
         {
             base.Initialize();
+            Managers.Game.GameStart();
             Managers.Game.SpawnPlayer();
         }
 
@@ -18,8 +19,5 @@ namespace Runtime.Scenes
         {
             
         }
-
-        
-
     }
 }

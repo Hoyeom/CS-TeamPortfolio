@@ -14,7 +14,7 @@ namespace Runtime.UI
 
         private void OnChangeScore(int score)
         {
-            _text.text = $"Score : {score.ToString()}";
+            _text.text = $"{score.ToString()}";
         }
     }
 }

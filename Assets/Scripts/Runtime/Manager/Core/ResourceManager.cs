@@ -1,8 +1,25 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Runtime.Contents;
+using UnityEngine;
 
 
     public class ResourceManager
     {
+        private Dictionary<int, PlayerController> characterDict = new Dictionary<int, PlayerController>();
+
+
+        public void Initialize()
+        {
+            PlayerController[] objs = Resources.LoadAll<PlayerController>("Prefabs/Characters");
+            foreach (var t in objs)
+                characterDict.Add(t.ID, t);
+        }
+
+        public GameObject LoadCharacter(int id)
+        {
+            return characterDict[id].gameObject;
+        }
+        
         public T Load<T>(string path) where T : Object
         {
             if (typeof(T) == typeof(GameObject))
@@ -24,16 +41,19 @@
             GameObject original = Load<GameObject>($"Prefabs/{path}");
             if (original == null)
                 Debug.Log($"Fail Load Prefab [Path :{path}]");
+            return Instantiate(original, parent);
+        }
 
+        public GameObject Instantiate(GameObject original, Transform parent = null)
+        {
             if (original.GetComponent<Poolable>() != null)
                 return Managers.Pool.Pop(original, parent).gameObject;
-            
             
             GameObject go = Object.Instantiate(original, parent);
             go.name = original.name;
             return go;
         }
-
+        
         public void Destroy(GameObject go)
         {
             if (go == null)

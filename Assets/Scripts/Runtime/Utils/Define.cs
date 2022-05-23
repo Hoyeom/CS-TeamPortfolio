@@ -4,6 +4,7 @@
         public enum Scene
         {
             None,
+            Menu,
             Game   
         }
 

@@ -34,23 +34,51 @@ namespace Runtime.Contents
             get => curHealth;
             set
             {
+                if(_state == State.Die) return;
+
                 curHealth = Mathf.Clamp(value, 0, MaxHealth);
+                
                 OnChangeHealth?.Invoke(curHealth, maxHealth);
+                
                 if (curHealth <= 0)
-                {
-                    _state = State.Die;
                     OnDied?.Invoke();
-                }
             }
         }
+
+        [SerializeField] private int id = 0;
+        private SpriteRenderer _renderer;
+        private Animator _anim;
+        private static readonly int Jump = Animator.StringToHash("jump");
+        public int ID => id;
 
         public event Action<float, float> OnChangeHealth;
         
         
         private void Start()
         {
+            _anim = GetComponent<Animator>();
+            _renderer = GetComponentInChildren<SpriteRenderer>();
             _setting = Managers.Game.Setting;
             Health = maxHealth;
+
+            OnDied += PlayerDie;
+        }
+
+        public event Action OnGameOver;
+
+        private void PlayerDie()
+        {
+            // 이건... 너무 막짯는데?...// 
+            _state = State.Die;
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(transform.DOJump(transform.position, 1, 1, .4f))
+                .Insert(0.4f, transform.DOMove(transform.position + Vector3.down * 10, 1))
+                .Insert(0.4f, transform.DOScale(0, 1f))
+                .OnComplete(() =>
+                {
+                    Managers.Resource.Instantiate("UI/GameOverUI");
+                    OnGameOver?.Invoke();
+                });
         }
 
         private void Update()
@@ -105,8 +133,7 @@ namespace Runtime.Contents
         
         private void DiedUpdate()
         {
-            DOTween.Clear();
-            Managers.Scene.LoadScene(Define.Scene.Game);
+
         }
 
         private void Move()
@@ -116,18 +143,19 @@ namespace Runtime.Contents
                 _state = State.Die;
             else
                 Health += MaxHealth * .1f;
-            
-            // transform.position += Managers.Game.GetNextPos(_dir);
 
-            transform.DOJump(transform.position +
-                             Managers.Game.GetNextPos(_dir),
+            _anim.SetBool(Jump, true);
+            transform.DOJump(Managers.Game.GetNextPos(transform.position,platform,_dir),
                     jumpPower,
                     1,
                     jumpDuration)
                 .OnComplete(() =>
                 {
+                    _anim.SetBool(Jump,false);
                     if (_state != State.Die)
+                    {
                         Managers.Game.Score++;
+                    }
                     else
                         OnDied?.Invoke();
                 });
@@ -136,6 +164,7 @@ namespace Runtime.Contents
         private void Turn(Define.Dir dir)
         {
             _dir = dir;
+            _renderer.flipX = _dir == Define.Dir.Left;
         }
 
         private void OnDrawGizmos()

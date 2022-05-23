@@ -16,6 +16,8 @@ public class GameManager
     
     private int floorCount = 0; // TEST
     private int score = 0;
+    
+    public int CharacterId { get; set; }
 
     public int Score
     {
@@ -31,6 +33,8 @@ public class GameManager
     public event Action<int> OnChangeCoin;
 
     private int coin = 0;
+    
+    
 
     public int Coin
     {
@@ -46,19 +50,31 @@ public class GameManager
 
     private Queue<Platform> PlatformQueue { get; } = new Queue<Platform>();
     private Queue<GameObject> destroyQueue { get; } = new Queue<GameObject>();
+    
+    private int bestScore = 0;
+    public int BestScore
+    {
+        get=> (score > bestScore) ? bestScore = score : bestScore;
+        set => bestScore = value;
+    }
 
     public void Initialize()
     {
         _setting = Managers.Resource.Load<GameSetting>("Settings/Normal");
-
         _setting = Managers.Game.Setting;
+    }
+
+    public void GameStart()
+    {
         while (PlatformQueue.Count < 20)
             GeneratePlatform();
     }
 
     public void SpawnPlayer()
     {
-        Player = Managers.Resource.Instantiate("Player").GetComponent<PlayerController>();
+        GameObject obj = Object.Instantiate(Managers.Resource.LoadCharacter(CharacterId));
+        obj.transform.position = Vector3.zero;
+        Player = obj.GetComponent<PlayerController>();
     }
 
     public Platform GetNextPlatform()
@@ -110,7 +126,6 @@ public class GameManager
     }
 
     private int itemCount = 0;
-    private int potionCount = 0;
     private List<int> randValues = new List<int>();
     
     private void SpawnItem(int floor, Vector3 pos)
@@ -135,9 +150,7 @@ public class GameManager
                 >= 200 => 2,
                 _ => 1
             };
-
-            Debug.Log($"Floor{floor} Temp {temp} ItemCount {itemCount}");
-
+            
             if (itemCount <= 0)
             {
                 randValues.Clear();
@@ -182,9 +195,11 @@ public class GameManager
             obj.transform.position = pos + Vector3.up * .5f;
     }
 
-    public Vector3 GetNextPos(Define.Dir dir)
+    public Vector3 GetNextPos(Vector3 pos,Platform platform,Define.Dir dir)
     {
         int[] index = {-1, 1};
-        return new Vector3(_setting.PlatformOffsetX * index[(int) dir], _setting.PlatformOffsetY);
+        return platform.Dir != dir ?
+            pos + new Vector3(_setting.PlatformOffsetX * index[(int) dir], _setting.PlatformOffsetY) :
+            platform.transform.position;
     }
 }
