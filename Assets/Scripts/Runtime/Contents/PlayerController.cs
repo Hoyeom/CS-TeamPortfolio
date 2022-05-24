@@ -10,8 +10,8 @@ namespace Runtime.Contents
     {
         private Define.Dir _dir = Define.Dir.Left;
         private GameSetting _setting;
-        
-        
+        private Controller _controller;
+
         public event Action OnDied;
         [SerializeField] private float jumpPower = 1;
         [SerializeField] private float jumpDuration = 0.1f;
@@ -23,7 +23,7 @@ namespace Runtime.Contents
         enum State
         {
             Idle,
-            StartGame,
+            Moving,
             Die
         }
 
@@ -54,6 +54,27 @@ namespace Runtime.Contents
         public event Action<float, float> OnChangeHealth;
         
         
+        private void OnEnable()
+        {
+            _state = State.Idle;
+            if (_controller == null)
+            {
+                _controller = new Controller();
+                _controller.Enable();
+                _controller.Player.Jump.started += JumpStarted;
+                _controller.Player.Turn.performed += TurnPerformed;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (_controller != null)
+            {
+                _controller.Disable();
+                _controller = null;
+            }
+        }
+        
         private void Start()
         {
             _anim = GetComponent<Animator>();
@@ -63,6 +84,8 @@ namespace Runtime.Contents
 
             OnDied += PlayerDie;
         }
+
+
 
         public event Action OnGameOver;
 
@@ -81,64 +104,22 @@ namespace Runtime.Contents
                 });
         }
 
-        private void Update()
+        private void TurnPerformed(InputAction.CallbackContext context)
         {
-            switch (_state)
-            {
-                case State.Idle:
-                    IdleUpdate();
-                    break;
-                case State.StartGame:
-                    StartUpdate();
-                    break;
-                case State.Die:
-                    DiedUpdate();
-                    break;
-            }
+            bool flip = context.ReadValue<float>() < 0;
+            _dir = flip ? Define.Dir.Left : Define.Dir.Right;
+            _renderer.flipX = flip;
         }
 
-        private void IdleUpdate()
+        private void JumpStarted(InputAction.CallbackContext context)
         {
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
-            {
-                Move();
-                _state = State.StartGame;
-            }
-        }
-        private void StartUpdate()
-        {
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
-                Move();
-            if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
-                Turn(Define.Dir.Right);
-            if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
-                Turn(Define.Dir.Left);
-            
+            if (_state == State.Idle)
+                _state = State.Moving;
+            if(_state == State.Die)
+                return;
 
-            HealthDown();
-        }
-
-        private void HealthDown()
-        {
-            float minus = 0;
-            if (Managers.Game.Score >= 300) minus = .5f;
-            else if (Managers.Game.Score >= 250) minus = .4f;
-            else if (Managers.Game.Score >= 200) minus = .3f;
-            else if (Managers.Game.Score >= 150) minus = .25f;
-            else if (Managers.Game.Score >= 100) minus = .2f;
-            else minus = .1f;
-            
-            Health -= MaxHealth * minus * Time.deltaTime;
-        }
-        
-        private void DiedUpdate()
-        {
-
-        }
-
-        private void Move()
-        {
             Platform platform = Managers.Game.GetNextPlatform();
+            
             if (platform.Dir != _dir)
                 _state = State.Die;
             else
@@ -160,13 +141,28 @@ namespace Runtime.Contents
                         OnDied?.Invoke();
                 });
         }
+        
+        
 
-        private void Turn(Define.Dir dir)
+        private void Update()
         {
-            _dir = dir;
-            _renderer.flipX = _dir == Define.Dir.Left;
+            if (_state != State.Moving) return;
+            HealthDown();
         }
 
+        private void HealthDown()
+        {
+            float minus = 0;
+            if (Managers.Game.Score >= 300) minus = .5f;
+            else if (Managers.Game.Score >= 250) minus = .4f;
+            else if (Managers.Game.Score >= 200) minus = .3f;
+            else if (Managers.Game.Score >= 150) minus = .25f;
+            else if (Managers.Game.Score >= 100) minus = .2f;
+            else minus = .1f;
+            
+            Health -= MaxHealth * minus * Time.deltaTime;
+        }
+        
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;

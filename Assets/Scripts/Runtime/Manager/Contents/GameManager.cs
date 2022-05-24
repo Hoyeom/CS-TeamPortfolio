@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class GameManager
 {
     public PlayerController Player { get; private set; }
+    public ShareInteger CharacterID { get; set; }
 
     private GameSetting _setting = null;
     
@@ -17,8 +18,6 @@ public class GameManager
     private int floorCount = 0; // TEST
     private int score = 0;
     
-    public int CharacterId { get; set; }
-
     public int Score
     {
         get => score;
@@ -60,6 +59,7 @@ public class GameManager
 
     public void Initialize()
     {
+        CharacterID = Managers.Resource.Load<ShareInteger>("Data/CharacterID");
         _setting = Managers.Resource.Load<GameSetting>("Settings/Normal");
         _setting = Managers.Game.Setting;
     }
@@ -72,7 +72,7 @@ public class GameManager
 
     public void SpawnPlayer()
     {
-        GameObject obj = Object.Instantiate(Managers.Resource.LoadCharacter(CharacterId));
+        GameObject obj = Object.Instantiate(Managers.Resource.LoadCharacter(CharacterID.Value));
         obj.transform.position = Vector3.zero;
         Player = obj.GetComponent<PlayerController>();
     }

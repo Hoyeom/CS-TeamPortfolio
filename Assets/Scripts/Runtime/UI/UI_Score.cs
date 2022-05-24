@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -14,7 +15,9 @@ namespace Runtime.UI
 
         private void OnChangeScore(int score)
         {
-            _text.text = $"{score.ToString()}";
+            _text.text = score.ToString();
+            _text.transform.localScale = Vector3.one * 1.5f;
+            _text.DOScale(1, 0.1f);
         }
     }
 }

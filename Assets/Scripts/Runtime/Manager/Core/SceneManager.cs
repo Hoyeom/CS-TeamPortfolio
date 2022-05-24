@@ -11,7 +11,8 @@ public class SceneManagerEx
     public void LoadScene(Define.Scene type)
     {
         Managers.Clear();
-        SceneManager.LoadScene(GetSceneName(type));
+        Scene scene = SceneManager.GetSceneByName(GetSceneName(type));
+        SceneManager.LoadSceneAsync(GetSceneName(type));
     }
 
     private string GetSceneName(Define.Scene type)

@@ -29,7 +29,7 @@ public class DataManager
         data.bestScore = Managers.Game.BestScore;
 
         string json = JsonUtility.ToJson(data);
-        Debug.Log(DATA_DIRECTORY + SAVE_FILENAME);
+        Debug.Log($"SAVE : DATA_DIRECTORY + SAVE_FILENAME");
         File.WriteAllText(DATA_DIRECTORY + SAVE_FILENAME,json);
     }
 

@@ -14,16 +14,14 @@ public class UI_Select : MonoBehaviour
         {
             Toggle toggle = _toggles[i];
             int j = i;
-            toggle.onValueChanged.AddListener(delegate(bool b) { Select(b, j); });
+            if (i == Managers.Game.CharacterID.Value)
+                toggle.isOn = true;
+            toggle.onValueChanged.AddListener(delegate(bool isOn) { Select(isOn, j); });
         }
     }
 
-    public void Select(bool value,int id)
+    public void Select(bool isOn,int id)
     {
-        if (value)
-        {
-            Managers.Game.CharacterId = id;
-            Debug.Log(id);
-        }
+        if (isOn) Managers.Game.CharacterID.Value = (uint) id;
     }
 }
