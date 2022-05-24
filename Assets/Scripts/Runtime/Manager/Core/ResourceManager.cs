@@ -15,7 +15,7 @@ using UnityEngine;
                 characterDict.Add(t.ID, t);
         }
 
-        public GameObject LoadCharacter(uint id)
+        public GameObject LoadCharacter(int id)
         {
             Debug.Log($"Load Character ID : {id}");
             GameObject obj = null;

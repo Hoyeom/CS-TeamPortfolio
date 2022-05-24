@@ -34,21 +34,23 @@ namespace Runtime.Contents
             get => curHealth;
             set
             {
-                if(_state == State.Die) return;
-
                 curHealth = Mathf.Clamp(value, 0, MaxHealth);
                 
                 OnChangeHealth?.Invoke(curHealth, maxHealth);
-                
+
                 if (curHealth <= 0)
+                {
+                    Debug.Log("Die");
+                    _controller.Disable();
                     OnDied?.Invoke();
+                }
             }
         }
 
         [SerializeField] private int id = 0;
         private SpriteRenderer _renderer;
         private Animator _anim;
-        private static readonly int Jump = Animator.StringToHash("jump");
+        private static readonly int HashJump = Animator.StringToHash("jump");
         public int ID => id;
 
         public event Action<float, float> OnChangeHealth;
@@ -81,7 +83,7 @@ namespace Runtime.Contents
             _renderer = GetComponentInChildren<SpriteRenderer>();
             _setting = Managers.Game.Setting;
             Health = maxHealth;
-
+            
             OnDied += PlayerDie;
         }
 
@@ -97,11 +99,7 @@ namespace Runtime.Contents
             sequence.Append(transform.DOJump(transform.position, 1, 1, .4f))
                 .Insert(0.4f, transform.DOMove(transform.position + Vector3.down * 10, 1))
                 .Insert(0.4f, transform.DOScale(0, 1f))
-                .OnComplete(() =>
-                {
-                    Managers.Resource.Instantiate("UI/GameOverUI");
-                    OnGameOver?.Invoke();
-                });
+                .OnComplete(() => OnGameOver?.Invoke());
         }
 
         private void TurnPerformed(InputAction.CallbackContext context)
@@ -115,34 +113,28 @@ namespace Runtime.Contents
         {
             if (_state == State.Idle)
                 _state = State.Moving;
-            if(_state == State.Die)
-                return;
-
-            Platform platform = Managers.Game.GetNextPlatform();
+            Jump(Managers.Game.GetNextPlatform());
+        }
+        
+        private void Jump(Platform platform)
+        {
+            bool isDead = platform.Dir != _dir;
             
-            if (platform.Dir != _dir)
-                _state = State.Die;
-            else
-                Health += MaxHealth * .1f;
-
-            _anim.SetBool(Jump, true);
+            Health += MaxHealth * .1f;
+            
+            _anim.SetBool(HashJump, true);
             transform.DOJump(Managers.Game.GetNextPos(transform.position,platform,_dir),
                     jumpPower,
                     1,
                     jumpDuration)
                 .OnComplete(() =>
                 {
-                    _anim.SetBool(Jump,false);
-                    if (_state != State.Die)
-                    {
-                        Managers.Game.Score++;
-                    }
-                    else
-                        OnDied?.Invoke();
+                    _anim.SetBool(HashJump,false);
+                    if (isDead) Health -= MaxHealth;
+                    else Managers.Game.Score++;
                 });
         }
-        
-        
+
 
         private void Update()
         {

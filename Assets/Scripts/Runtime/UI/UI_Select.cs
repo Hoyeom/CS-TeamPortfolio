@@ -14,7 +14,7 @@ public class UI_Select : MonoBehaviour
         {
             Toggle toggle = _toggles[i];
             int j = i;
-            if (i == Managers.Game.CharacterID.Value)
+            if (i == Managers.Game.CharacterID)
                 toggle.isOn = true;
             toggle.onValueChanged.AddListener(delegate(bool isOn) { Select(isOn, j); });
         }
@@ -22,6 +22,6 @@ public class UI_Select : MonoBehaviour
 
     public void Select(bool isOn,int id)
     {
-        if (isOn) Managers.Game.CharacterID.Value = (uint) id;
+        if (isOn) Managers.Game.CharacterID = id;
     }
 }

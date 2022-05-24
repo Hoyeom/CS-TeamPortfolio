@@ -13,6 +13,12 @@ namespace Runtime.Scenes
             base.Initialize();
             Managers.Game.GameStart();
             Managers.Game.SpawnPlayer();
+            Managers.Game.Player.OnGameOver += GameOverUI;
+        }
+
+        private void GameOverUI()
+        {
+            Managers.Resource.Instantiate("UI/GameOverUI");
         }
 
         public override void Clear()

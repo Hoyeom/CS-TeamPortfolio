@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class GameManager
 {
     public PlayerController Player { get; private set; }
-    public ShareInteger CharacterID { get; set; }
+    public int CharacterID { get; set; }
 
     private GameSetting _setting = null;
     
@@ -59,7 +59,6 @@ public class GameManager
 
     public void Initialize()
     {
-        CharacterID = Managers.Resource.Load<ShareInteger>("Data/CharacterID");
         _setting = Managers.Resource.Load<GameSetting>("Settings/Normal");
         _setting = Managers.Game.Setting;
     }
@@ -72,7 +71,7 @@ public class GameManager
 
     public void SpawnPlayer()
     {
-        GameObject obj = Object.Instantiate(Managers.Resource.LoadCharacter(CharacterID.Value));
+        GameObject obj = Object.Instantiate(Managers.Resource.LoadCharacter(CharacterID));
         obj.transform.position = Vector3.zero;
         Player = obj.GetComponent<PlayerController>();
     }
@@ -156,7 +155,13 @@ public class GameManager
                 randValues.Clear();
                 for (int i = 0; i < temp; i++)
                 {
-                    randValues.Add(Random.Range(0, 50));
+                    int rand = Random.Range(0, 50);
+                    if (randValues.Contains(rand))
+                    {
+                        i--;
+                        continue;
+                    }
+                    randValues.Add(rand);
                 }
                 itemCount = 50;
             }

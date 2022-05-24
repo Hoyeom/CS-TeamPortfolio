@@ -21,7 +21,7 @@ namespace Runtime.UI
 
             if (cur > temp)
             {
-                _image.color = Color.white;
+                _image.color = Color.gray;
                 _image.DOColor(_color, .2f).Restart();
             }
 
