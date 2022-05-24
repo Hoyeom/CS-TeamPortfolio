@@ -267,6 +267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _image: {fileID: 2878394180862914820}
+  _color: {r: 1, g: 0.24056602, b: 0.24056602, a: 0}
 --- !u!1 &4993644264305493855
 GameObject:
   m_ObjectHideFlags: 0

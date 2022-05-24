@@ -695,6 +695,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2878394181557379625, guid: bf557788d4247b542b2072880d004b36, type: 3}
+      propertyPath: _color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2878394181557379625, guid: bf557788d4247b542b2072880d004b36, type: 3}
+      propertyPath: _color.b
+      value: 0.23137257
+      objectReference: {fileID: 0}
+    - target: {fileID: 2878394181557379625, guid: bf557788d4247b542b2072880d004b36, type: 3}
+      propertyPath: _color.g
+      value: 0.23137257
+      objectReference: {fileID: 0}
     - target: {fileID: 2878394181557379628, guid: bf557788d4247b542b2072880d004b36, type: 3}
       propertyPath: m_Name
       value: HealthUI
