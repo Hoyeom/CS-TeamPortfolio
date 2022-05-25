@@ -480,6 +480,7 @@ GameObject:
   - component: {fileID: 7414589836744971472}
   - component: {fileID: 7414589836744971474}
   - component: {fileID: 7414589836744971473}
+  - component: {fileID: 8921726672862394129}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -545,6 +546,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8921726672862394129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7414589836744971439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 4, y: -4}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7414589837074186606
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,7 +733,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 1, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7414589837168609637
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -746,7 +762,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7293598183456022363, guid: 1ddc9afd21fec77489b1248d18f31b68, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5577698f594d26f4a8e7d70d64f1ad52, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1209,14 +1225,14 @@ MonoBehaviour:
   m_text: GAME OVER
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 27b695ae84767ac449e6f9e480315d28, type: 2}
-  m_sharedMaterial: {fileID: -29150951594969660, guid: 27b695ae84767ac449e6f9e480315d28, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 935cb41a98c54ed469351b9fec9928c2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279381503
-  m_fontColor: {r: 1, g: 0.17725913, b: 0.07075471, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1614,7 +1630,7 @@ MonoBehaviour:
   m_text: "\uBCA0\uD0A4\uC758 \uBB34\uD55C\uC758 \uACC4\uB2E8"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 27b695ae84767ac449e6f9e480315d28, type: 2}
-  m_sharedMaterial: {fileID: -29150951594969660, guid: 27b695ae84767ac449e6f9e480315d28, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 1683fdfdb902d1c4ca7cde41a54c7532, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
