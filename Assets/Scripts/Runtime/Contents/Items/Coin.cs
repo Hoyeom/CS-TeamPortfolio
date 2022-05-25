@@ -12,7 +12,5 @@ namespace Runtime.Contents
             Managers.Game.Coin += coinCount;
             Managers.Resource.Destroy(gameObject);
         }
-
-
     }
 }

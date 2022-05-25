@@ -8,16 +8,19 @@ namespace Runtime.Contents
 {
     public class PlayerController : MonoBehaviour
     {
+        private static readonly int HashJump = Animator.StringToHash("jump");
+        
         private Define.Dir _dir = Define.Dir.Left;
         private GameSetting _setting;
         private Controller _controller;
 
-        public event Action OnDied;
         [SerializeField] private float jumpPower = 1;
         [SerializeField] private float jumpDuration = 0.1f;
-
         [SerializeField] private float maxHealth = 100;
+        [SerializeField] private State _state = State.Idle;
+
         public float MaxHealth => maxHealth;
+        
         private float curHealth;
 
         enum State
@@ -27,8 +30,6 @@ namespace Runtime.Contents
             Die
         }
 
-        [SerializeField] private State _state = State.Idle;
-        
         public float Health
         {
             get => curHealth;
@@ -48,12 +49,15 @@ namespace Runtime.Contents
         }
 
         [SerializeField] private int id = 0;
+        public int ID => id;
+        
         private SpriteRenderer _renderer;
         private Animator _anim;
-        private static readonly int HashJump = Animator.StringToHash("jump");
-        public int ID => id;
+        
 
         public event Action<float, float> OnChangeHealth;
+        public event Action OnGameOver;
+        public event Action OnDied;
         
         
         private void OnEnable()
@@ -87,13 +91,11 @@ namespace Runtime.Contents
             OnDied += PlayerDie;
         }
 
-
-
-        public event Action OnGameOver;
-
+        /// <summary>
+        /// 플레이어 사망
+        /// </summary>
         private void PlayerDie()
         {
-            // 이건... 너무 막짯는데?...// 
             _state = State.Die;
             Sequence sequence = DOTween.Sequence();
             sequence.Append(transform.DOJump(transform.position, 1, 1, .4f))
@@ -102,6 +104,10 @@ namespace Runtime.Contents
                 .OnComplete(() => OnGameOver?.Invoke());
         }
 
+        /// <summary>
+        /// 좌 우 회전
+        /// </summary>
+        /// <param name="context">float</param>
         private void TurnPerformed(InputAction.CallbackContext context)
         {
             bool flip = context.ReadValue<float>() < 0;
@@ -109,6 +115,10 @@ namespace Runtime.Contents
             _renderer.flipX = flip;
         }
 
+        /// <summary>
+        /// 현재 방향으로 점프
+        /// </summary>
+        /// <param name="context">bool</param>
         private void JumpStarted(InputAction.CallbackContext context)
         {
             if (_state == State.Idle)
@@ -116,6 +126,11 @@ namespace Runtime.Contents
             Jump(Managers.Game.GetNextPlatform());
         }
         
+        /// <summary>
+        /// 현재 방향에 플랫폼이 있다면 점수
+        /// 없다면 사망
+        /// </summary>
+        /// <param name="platform"></param>
         private void Jump(Platform platform)
         {
             bool isDead = platform.Dir != _dir;
@@ -133,9 +148,13 @@ namespace Runtime.Contents
                     if (isDead) Health -= MaxHealth;
                     else Managers.Game.Score++;
                 });
+                
         }
 
 
+        /// <summary>
+        /// 움직이는 상태라면 체력 감소
+        /// </summary>
         private void Update()
         {
             if (_state != State.Moving) return;
