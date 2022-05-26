@@ -10,6 +10,7 @@ namespace Runtime.Contents
         public override void PickUp()
         {
             Managers.Game.Coin += coinCount;
+            Managers.Sound.Play("Fx/Coin");
             Managers.Resource.Destroy(gameObject);
         }
     }

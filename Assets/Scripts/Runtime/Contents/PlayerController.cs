@@ -9,6 +9,7 @@ namespace Runtime.Contents
     public class PlayerController : MonoBehaviour
     {
         private static readonly int HashJump = Animator.StringToHash("jump");
+        private static readonly int Die = Animator.StringToHash("die");
         
         private Define.Dir _dir = Define.Dir.Left;
         private GameSetting _setting;
@@ -39,7 +40,7 @@ namespace Runtime.Contents
                 
                 OnChangeHealth?.Invoke(curHealth, maxHealth);
 
-                if (curHealth <= 0)
+                if (curHealth <= 0 && _state != State.Die) 
                 {
                     Debug.Log("Die");
                     _controller.Disable();
@@ -53,7 +54,7 @@ namespace Runtime.Contents
         
         private SpriteRenderer _renderer;
         private Animator _anim;
-        
+
 
         public event Action<float, float> OnChangeHealth;
         public event Action OnGameOver;
@@ -97,10 +98,14 @@ namespace Runtime.Contents
         private void PlayerDie()
         {
             _state = State.Die;
+
+            Managers.Sound.Play("Fx/Died");
+            
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(transform.DOJump(transform.position, 1, 1, .4f))
-                .Insert(0.4f, transform.DOMove(transform.position + Vector3.down * 10, 1))
-                .Insert(0.4f, transform.DOScale(0, 1f))
+            sequence.Append(transform.DOJump(transform.position, 1, 1, .4f)
+                    .OnComplete(()=>_anim.SetBool(Die,true)))
+                .Insert(0.4f, transform.DOMove(transform.position + Vector3.down * 10, 2f))
+                .Insert(0.4f, transform.DOScale(0, 2f))
                 .OnComplete(() => OnGameOver?.Invoke());
         }
 

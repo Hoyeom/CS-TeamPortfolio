@@ -7,6 +7,7 @@ namespace Runtime.Scenes
         protected override void Initialize()
         {
             base.Initialize();
+            Managers.Sound.Play("Bgm/Main",Define.Sound.Bgm);
         }
 
         public override void Clear()

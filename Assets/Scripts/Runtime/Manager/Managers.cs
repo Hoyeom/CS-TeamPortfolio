@@ -54,12 +54,14 @@ public class Managers : MonoBehaviour
 
         _instance._data.Initialize();
         _instance._game.Initialize();
+        _instance._sound.Initialize();
         _instance._resource.Initialize();
     }
 
     public static void Clear()
     {
         Scene.Clear();
+        Sound.Clear();
         Game.Clear();
     }
 }

@@ -25,12 +25,19 @@ public class GameManager
         {
             score = value;
             OnChangeScore?.Invoke(score);
+            if (score % 100 == 0)
+            {
+                Debug.Log("다음구역");
+                OnNextArea?.Invoke();
+            }
         }
     }
 
     public event Action<int> OnChangeScore;
     public event Action<int> OnChangeCoin;
 
+    public event Action OnNextArea;
+    
     private int coin = 0;
     
     

@@ -14,6 +14,8 @@ namespace Runtime.Scenes
             Managers.Game.GameStart();
             Managers.Game.SpawnPlayer();
             Managers.Game.Player.OnGameOver += GameOverUI;
+            
+            Managers.Sound.Play("Bgm/Main",Define.Sound.Bgm);
         }
 
         private void GameOverUI()

@@ -6,7 +6,7 @@
 
     public class SoundManager
     {
-                private AudioSource[] _audioSources = new AudioSource[Enum.GetValues(typeof(Define.Sound)).Length];
+        private AudioSource[] _audioSources = new AudioSource[Enum.GetValues(typeof(Define.Sound)).Length];
 
         private Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
 
@@ -43,7 +43,8 @@
 
         public void Play(string path, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
         {
-            
+            AudioClip audioClip = GetOrAddAudioClip(path, type);
+            Play(audioClip, type, pitch);
         }
 
         public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
