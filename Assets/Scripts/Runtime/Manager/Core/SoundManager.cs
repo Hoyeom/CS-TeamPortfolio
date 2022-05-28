@@ -89,4 +89,7 @@
             return audioClip;
         }
 
+        public void SetAudioVolume(Define.Sound type, float volume)
+            => _audioSources[(int) type].volume = volume;
+
     }

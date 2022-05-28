@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Runtime.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -45,14 +46,13 @@ public class Managers : MonoBehaviour
     private static void Initialize()
     {
         if (_instance != null) return;
-
+        
         Util.FindOrNewComponent(out _instance, DEFAULT_NAME);
-
-        Scene managerScene = SceneManager.CreateScene("Managers");
-
-        SceneManager.MoveGameObjectToScene(_instance.gameObject, managerScene);
-
+        
+        DontDestroyOnLoad(_instance.gameObject);
+        DOTween.Init();
         _instance._data.Initialize();
+        _instance._pool.Initialize();
         _instance._game.Initialize();
         _instance._sound.Initialize();
         _instance._resource.Initialize();
@@ -60,8 +60,10 @@ public class Managers : MonoBehaviour
 
     public static void Clear()
     {
+        DOTween.Clear(true);
         Scene.Clear();
         Sound.Clear();
+        Pool.Clear();
         Game.Clear();
     }
 }

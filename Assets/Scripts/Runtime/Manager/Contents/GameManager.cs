@@ -15,7 +15,7 @@ public class GameManager
     private Vector3 _spawnPos = Vector3.zero;
     private Define.Dir _spawnDir = Define.Dir.Left;
     
-    private int floorCount = 0; // TEST
+    private int floorCount = 0;
     private int score = 0;
     
     public int Score
@@ -68,6 +68,7 @@ public class GameManager
     {
         _setting = Managers.Resource.Load<GameSetting>("Settings/Normal");
         _setting = Managers.Game.Setting;
+        ResetGame();
     }
 
     public void GameStart()
@@ -99,7 +100,15 @@ public class GameManager
 
     public void Clear()
     {
+        ResetGame();
         PlatformQueue.Clear();
+    }
+
+    private void ResetGame()
+    {
+        floorCount = 0;
+        _spawnPos = Vector3.zero;
+        _spawnDir = Define.Dir.Left;
     }
 
     private void GeneratePlatform()

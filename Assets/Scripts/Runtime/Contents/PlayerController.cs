@@ -101,14 +101,14 @@ namespace Runtime.Contents
 
             Managers.Sound.Play("Fx/Died");
             
-            Sequence sequence = DOTween.Sequence();
-            sequence.Append(transform.DOJump(transform.position, 1, 1, .4f)
+            DOTween.Sequence()
+                .Append(transform.DOJump(transform.position, 1, 1, .4f)
                     .OnComplete(()=>_anim.SetBool(Die,true)))
                 .Insert(0.4f, transform.DOMove(transform.position + Vector3.down * 10, 2f))
                 .Insert(0.4f, transform.DOScale(0, 2f))
                 .OnComplete(() => OnGameOver?.Invoke());
         }
-
+        
         /// <summary>
         /// 좌 우 회전
         /// </summary>
