@@ -51,11 +51,13 @@ namespace Runtime.UI
                     _prevImage.color = Color.white;
                     _nextImage.color = new Color(1, 1, 1, 0);
                 })
-                .Insert(0,
-                    _prevImage.DOFade(0, fadeDuration))
-                .Insert(0,
-                    _nextImage.DOFade(1, fadeDuration))
-                .OnComplete(() => NextCount++)
+                .Insert(0, _prevImage.DOFade(0, fadeDuration))
+                .Insert(0, _nextImage.DOFade(1, fadeDuration))
+                .OnComplete(() =>
+                {
+                    _prevImage.sprite = _nextImage.sprite;
+                    NextCount++;
+                })
                 .SetAutoKill(false);
 
         }
