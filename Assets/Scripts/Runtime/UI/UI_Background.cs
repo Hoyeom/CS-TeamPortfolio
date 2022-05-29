@@ -62,7 +62,8 @@ namespace Runtime.UI
 
         private void NextImage()
         {
-            fadeInOut.Play();
+            fadeInOut.Play()
+                .Restart();
         }
         
     }
