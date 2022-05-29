@@ -106,6 +106,7 @@ public class GameManager
 
     private void ResetGame()
     {
+        score = 0;
         floorCount = 0;
         _spawnPos = Vector3.zero;
         _spawnDir = Define.Dir.Left;
